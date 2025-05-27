@@ -30,7 +30,8 @@ namespace ReefEditor {
 
         public string batchSourcePath {
             get {
-                return Path.Combine(gamePath, gameDataFolder, dataToUnmanaged, gameExportWindow, "CompiledOctreesCache");
+                //return Path.Combine(gamePath, gameDataFolder, dataToUnmanaged, gameExportWindow, "CompiledOctreesCache");
+                return "/Users/ryanmarr/Library/Application Support/Steam/steamapps/common/Subnautica/Subnautica.app/Contents/Resources/Data/StreamingAssets/SNUnmanagedData/Build18/CompiledOctreesCache";
             }
         }
         public string batchOutputPath {
@@ -50,7 +51,8 @@ namespace ReefEditor {
         }
         public string resourcesSourcePath {
             get {
-                return Path.Combine(gamePath, gameDataFolder);
+                //return Path.Combine(gamePath, gameDataFolder);
+                return "/Users/ryanmarr/Library/Application Support/Steam/steamapps/common/Subnautica/Subnautica.app/Contents/Resources/Data";
             }
         }
         public string blocktypeStringsFilename {

@@ -48,14 +48,37 @@ namespace ReefEditor {
         }
 
         public static void InitiateRegionLoad(Vector3Int choiceA, Vector3Int choiceB) {
+            
             var reader = new MetaspaceReader();
             reader.inputA = choiceA;
             reader.inputB = choiceB;
             EditorManager.GetLoading().OnQueueEmpty += instance.OnRegionLoaded;
             EditorManager.GetLoading().AddLoader(reader);
             EditorManager.GetLoading().AddLoader(instance.streamer);
-
+            
+            // First ensure materials are loaded
+            // if (!EditorManager.GetContentLoader().IsFinished()) {
+            //     EditorManager.InitiateMaterialsLoad();
+            //     EditorManager.GetLoading().OnQueueEmpty += () => {
+            //         // Once materials are loaded, start terrain loading
+            //         var reader = new MetaspaceReader();
+            //         reader.inputA = choiceA;
+            //         reader.inputB = choiceB;
+            //         EditorManager.GetLoading().OnQueueEmpty += instance.OnRegionLoaded;
+            //         EditorManager.GetLoading().AddLoader(reader);
+            //         EditorManager.GetLoading().AddLoader(instance.streamer);
+            //     };
+            // } else {
+            //     // Materials already loaded, proceed with terrain loading
+            //     var reader = new MetaspaceReader();
+            //     reader.inputA = choiceA;
+            //     reader.inputB = choiceB;
+            //     EditorManager.GetLoading().OnQueueEmpty += instance.OnRegionLoaded;
+            //     EditorManager.GetLoading().AddLoader(reader);
+            //     EditorManager.GetLoading().AddLoader(instance.streamer);
+            // }
         }
+        
         public static void InitiateRegionExport(int exportMode) {
             var writer = new MetaspaceWriter();
             writer.mode = exportMode;
@@ -187,7 +210,16 @@ namespace ReefEditor {
             return Utilities.LinearIndex(localX, localY, localZ, OctreeCounts);
         }
 
-        public Material GetMaterialForBlocktype(int blocktype) => blocktypes[blocktype].MakeMaterial();
+        public Material GetMaterialForBlocktype(int blocktype) {
+            if (blocktypes == null || blocktype >= blocktypes.Length || blocktypes[blocktype] == null) {
+                // Return a default material if materials aren't loaded yet
+                Material defaultMat = new Material(EditorManager.GetDefaultTriplanarMaterial());
+                defaultMat.name = $"Default Material for type {blocktype}";
+                defaultMat.SetColor("_Color", EditorManager.ColorFromType(blocktype));
+                return defaultMat;
+            }
+            return blocktypes[blocktype].MakeMaterial();
+        }
         public bool CheckBlocktypeDefined(int blocktype) {
             var gg = blocktypes[blocktype];
             if (gg == null) return false;

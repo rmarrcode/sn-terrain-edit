@@ -9,7 +9,7 @@ namespace ReefEditor {
     public static class BatchReadWriter {
 
         public static IEnumerator<OctNode> ReadBatch(Vector3Int batchIndex) {
-            string batchname = string.Format("\\compiled-batch-{0}-{1}-{2}.optoctrees", batchIndex.x, batchIndex.y, batchIndex.z);
+            string batchname = string.Format("/compiled-batch-{0}-{1}-{2}.optoctrees", batchIndex.x, batchIndex.y, batchIndex.z);
 
             Vector3Int octreeDimensions = Vector3Int.one * 5;
             if (batchIndex.x == 25) octreeDimensions.x = 3;

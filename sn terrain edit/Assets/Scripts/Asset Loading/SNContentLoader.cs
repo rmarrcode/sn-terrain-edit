@@ -53,7 +53,7 @@ namespace ReefEditor.ContentLoading {
 
         private void GetAssets(List<AssetStudio.Texture2D> textureAssets, List<AssetStudio.Material> materialAssets) {
 
-            string bundleName = "\\resources.assets";
+            string bundleName = "/resources";
             string resourcesPath = EditorManager.instance.resourcesSourcePath + bundleName;
             string[] files = { resourcesPath };
 
