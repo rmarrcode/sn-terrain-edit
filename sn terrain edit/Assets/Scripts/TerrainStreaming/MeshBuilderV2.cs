@@ -15,21 +15,19 @@ namespace ReefEditor {
             var vertexBuffer = new List<Vector3>();
             node.FillVertexList(vertexBuffer);
 
+
             var indexBuffer = new List<int>();
             node.UpdateEdgesSolidity();
             CellProc(indexBuffer, node);
 
-            // Get unique blocktypes from the node
-            var blocktypeSet = new HashSet<int>();
-            node.GetBlocktypes(blocktypeSet);
-            blocktypes = blocktypeSet.ToArray();
+            blocktypes = new int[] { 1 };
 
             var mesh = new Mesh() {
                 vertices = vertexBuffer.ToArray(),
                 triangles = indexBuffer.ToArray(),
             };
 
-            Debug.Log($"verts: {vertexBuffer.Count}, tris: {indexBuffer.Count / 3}, blocktypes: {string.Join(", ", blocktypes)}");
+            Debug.Log($"verts: {vertexBuffer.Count}, tris: {indexBuffer.Count / 3}");
 
             mesh.RecalculateNormals();
             mesh.RecalculateTangents();

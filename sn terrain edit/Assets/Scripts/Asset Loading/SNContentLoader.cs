@@ -93,6 +93,8 @@ namespace ReefEditor.ContentLoading {
             blocktypesData = new BlocktypeMaterial[255];
             materialBlocktypes = new Dictionary<string, List<int>>();
 
+            Debug.Log($"Loading {lines.Length} material names from {EditorManager.instance.blocktypeStringsFilename}");
+
             foreach (string line in lines) {
                 string[] split1 = line.Split(')');
                 int.TryParse(split1[0], out int blocktype);
@@ -114,10 +116,12 @@ namespace ReefEditor.ContentLoading {
                 blocktypes.Add(blocktype);
                 
                 blocktypesData[blocktype] = new BlocktypeMaterial(materialName, nondecoName, blocktype);
+                Debug.Log($"Loaded material {materialName} (nondeco: {nondecoName}) for blocktype {blocktype}");
             }
         }
 
         private void SetTextures(AssetStudio.Texture2D[] textureAssets) {
+            Debug.Log($"Setting {textureAssets.Length} textures");
             foreach (AssetStudio.Texture2D textureAsset in textureAssets) {
                 List<int> blocktypes = new List<int>();
                 if (IsTextureNeeded(textureAsset.m_PathID, out blocktypes)) {
@@ -129,6 +133,7 @@ namespace ReefEditor.ContentLoading {
 
                     foreach(int b in blocktypes) {
                         blocktypesData[b].SetTexture(textureAsset.m_PathID, newtexture);
+                        Debug.Log($"Assigned texture {textureAsset.m_Name} to blocktype {b}");
                     }
                 }
             }
@@ -149,7 +154,9 @@ namespace ReefEditor.ContentLoading {
         }
 
         private void SetMaterials(AssetStudio.Material[] materialAssets) {
+            Debug.Log($"Setting {materialAssets.Length} materials");
             foreach (AssetStudio.Material materialAsset in materialAssets) {
+                Debug.Log($"Processing material: {materialAsset.m_Name}");
 
                 var texturePathIDs = new Dictionary<long, string>();
                 foreach(KeyValuePair<string, AssetStudio.UnityTexEnv> pair in materialAsset.m_SavedProperties.m_TexEnvs) {
@@ -161,7 +168,10 @@ namespace ReefEditor.ContentLoading {
                 if (materialBlocktypes.ContainsKey(materialAsset.m_Name)) {
                     foreach(int blocktype in materialBlocktypes[materialAsset.m_Name]) {
                         blocktypesData[blocktype].propertyFromPathIDMap = texturePathIDs;
+                        Debug.Log($"Assigned material {materialAsset.m_Name} to blocktype {blocktype}");
                     }
+                } else {
+                    Debug.LogWarning($"No blocktypes found for material {materialAsset.m_Name}");
                 }
             }
         }

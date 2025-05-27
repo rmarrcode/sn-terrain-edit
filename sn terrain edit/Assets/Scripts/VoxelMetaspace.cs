@@ -48,35 +48,27 @@ namespace ReefEditor {
         }
 
         public static void InitiateRegionLoad(Vector3Int choiceA, Vector3Int choiceB) {
-            
-            var reader = new MetaspaceReader();
-            reader.inputA = choiceA;
-            reader.inputB = choiceB;
-            EditorManager.GetLoading().OnQueueEmpty += instance.OnRegionLoaded;
-            EditorManager.GetLoading().AddLoader(reader);
-            EditorManager.GetLoading().AddLoader(instance.streamer);
-            
             // First ensure materials are loaded
-            // if (!EditorManager.GetContentLoader().IsFinished()) {
-            //     EditorManager.InitiateMaterialsLoad();
-            //     EditorManager.GetLoading().OnQueueEmpty += () => {
-            //         // Once materials are loaded, start terrain loading
-            //         var reader = new MetaspaceReader();
-            //         reader.inputA = choiceA;
-            //         reader.inputB = choiceB;
-            //         EditorManager.GetLoading().OnQueueEmpty += instance.OnRegionLoaded;
-            //         EditorManager.GetLoading().AddLoader(reader);
-            //         EditorManager.GetLoading().AddLoader(instance.streamer);
-            //     };
-            // } else {
-            //     // Materials already loaded, proceed with terrain loading
-            //     var reader = new MetaspaceReader();
-            //     reader.inputA = choiceA;
-            //     reader.inputB = choiceB;
-            //     EditorManager.GetLoading().OnQueueEmpty += instance.OnRegionLoaded;
-            //     EditorManager.GetLoading().AddLoader(reader);
-            //     EditorManager.GetLoading().AddLoader(instance.streamer);
-            // }
+            if (!EditorManager.GetContentLoader().IsFinished()) {
+                EditorManager.InitiateMaterialsLoad();
+                EditorManager.GetLoading().OnQueueEmpty += () => {
+                    // Once materials are loaded, start terrain loading
+                    var reader = new MetaspaceReader();
+                    reader.inputA = choiceA;
+                    reader.inputB = choiceB;
+                    EditorManager.GetLoading().OnQueueEmpty += instance.OnRegionLoaded;
+                    EditorManager.GetLoading().AddLoader(reader);
+                    EditorManager.GetLoading().AddLoader(instance.streamer);
+                };
+            } else {
+                // Materials already loaded, proceed with terrain loading
+                var reader = new MetaspaceReader();
+                reader.inputA = choiceA;
+                reader.inputB = choiceB;
+                EditorManager.GetLoading().OnQueueEmpty += instance.OnRegionLoaded;
+                EditorManager.GetLoading().AddLoader(reader);
+                EditorManager.GetLoading().AddLoader(instance.streamer);
+            }
         }
         
         public static void InitiateRegionExport(int exportMode) {
