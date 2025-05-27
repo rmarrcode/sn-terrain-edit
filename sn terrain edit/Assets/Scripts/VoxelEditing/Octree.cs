@@ -214,6 +214,18 @@ namespace ReefEditor.VoxelEditing {
             voxelData.signedDistance == other.voxelData.signedDistance;
         }
 
+        public void GetBlocktypes(HashSet<int> blocktypes) {
+            if (HasChildren) {
+                for (int i = 0; i < 8; i++) {
+                    children[i].GetBlocktypes(blocktypes);
+                }
+            } else {
+                if (voxelData.blocktype != 0) {
+                    blocktypes.Add(voxelData.blocktype);
+                }
+            }
+        }
+
         // constants
         private static readonly Vector3Int[] cornerOffsets = {
             new Vector3Int(0, 0, 0),

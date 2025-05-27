@@ -52,7 +52,7 @@ namespace ReefEditor {
         public string resourcesSourcePath {
             get {
                 //return Path.Combine(gamePath, gameDataFolder);
-                return "/Users/ryanmarr/Library/Application Support/Steam/steamapps/common/Subnautica/Subnautica.app/Contents/Resources/Data";
+                return "/Users/ryanmarr/Documents/Data";
             }
         }
         public string blocktypeStringsFilename {

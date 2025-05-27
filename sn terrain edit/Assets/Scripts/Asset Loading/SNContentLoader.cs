@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 namespace ReefEditor.ContentLoading {
     public class SNContentLoader : ILoader {
@@ -52,13 +53,21 @@ namespace ReefEditor.ContentLoading {
         }
 
         private void GetAssets(List<AssetStudio.Texture2D> textureAssets, List<AssetStudio.Material> materialAssets) {
-
-            string bundleName = "/resources";
-            string resourcesPath = EditorManager.instance.resourcesSourcePath + bundleName;
-            string[] files = { resourcesPath };
+            string resourcesPath = EditorManager.instance.resourcesSourcePath;
+            string resourcesFile = Path.Combine(resourcesPath, "resources.assets");
+            string resourcesSplitFile = Path.Combine(resourcesPath, "resources.assets.resS");
 
             AssetStudio.AssetsManager assetManager = new AssetStudio.AssetsManager();
-            assetManager.LoadFiles(files);
+            
+            // Load both files
+            if (File.Exists(resourcesFile))
+            {
+                assetManager.LoadFiles(resourcesFile);
+            }
+            if (File.Exists(resourcesSplitFile))
+            {
+                assetManager.LoadFiles(resourcesSplitFile);
+            }
             
             foreach (AssetStudio.SerializedFile file in assetManager.assetsFileList) {
                 foreach(AssetStudio.Object obj in file.Objects) {
