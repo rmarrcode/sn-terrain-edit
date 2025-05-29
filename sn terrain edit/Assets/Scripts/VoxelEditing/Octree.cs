@@ -66,25 +66,47 @@ namespace ReefEditor.VoxelEditing {
         }
 
         public void WriteToArray(List<OctNodeData> dataArray) {
+            if (dataArray == null) {
+                dataArray = new List<OctNodeData>();
+            }
+            Debug.Log($"Writing node at position {position}, size {size}, hasChildren: {HasChildren}");
             dataArray.Add(voxelData.Encode());
             if (HasChildren) {
-                WriteChildrenToArray(dataArray, 1);
+                WriteChildrenToArray(dataArray, dataArray.Count - 1);
             }
         }
         private void WriteChildrenToArray(List<OctNodeData> dataarray, int myPos) {
+            if (!HasChildren || myPos < 0 || myPos >= dataarray.Count) {
+                Debug.LogWarning($"Invalid write attempt - HasChildren: {HasChildren}, myPos: {myPos}, arrayCount: {dataarray.Count}");
+                return;
+            }
 
-            if (HasChildren) {
-
+            try {
                 // get new child index
                 int newChildIndex = dataarray.Count;
+                Debug.Log($"Writing children at index {newChildIndex} for parent at {myPos}");
                 dataarray[myPos].childPosition = (ushort)newChildIndex;
 
+                // Add all children's data first
                 for (int i = 0; i < 8; i++) {
-                    dataarray.Add(children[i].voxelData.Encode());
+                    if (children[i] != null) {
+                        Debug.Log($"Adding child {i} at position {children[i].position}");
+                        dataarray.Add(children[i].voxelData.Encode());
+                    } else {
+                        Debug.LogWarning($"Null child at index {i}");
+                        dataarray.Add(new OctNodeData(0, 0, 0));
+                    }
                 }
+
+                // Then process children recursively
                 for (int i = 0; i < 8; i++) {
-                    children[i].WriteChildrenToArray(dataarray, (newChildIndex + i));
+                    if (children[i] != null) {
+                        children[i].WriteChildrenToArray(dataarray, newChildIndex + i);
+                    }
                 }
+            } catch (System.Exception e) {
+                Debug.LogError($"Error writing octree data: {e.Message}\nPosition: {position}, Size: {size}, HasChildren: {HasChildren}\nStack trace: {e.StackTrace}");
+                throw;
             }
         }
 

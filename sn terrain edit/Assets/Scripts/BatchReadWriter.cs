@@ -86,7 +86,7 @@ namespace ReefEditor {
             }
         } 
         private static bool WriteOptoctrees(Vector3 batchIndex, IEnumerator<OctNode> rootNodes) { 
-            string batchname = string.Format("\\compiled-batch-{0}-{1}-{2}.optoctrees", batchIndex.x, batchIndex.y, batchIndex.z);
+            string batchname = string.Format("/compiled-batch-{0}-{1}-{2}.optoctrees", batchIndex.x, batchIndex.y, batchIndex.z);
             
             Debug.Log($"Writing {batchname} to {EditorManager.instance.batchOutputPath}");
 
